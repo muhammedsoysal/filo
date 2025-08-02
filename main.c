@@ -6,7 +6,7 @@
 /*   By: musoysal <musoysal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 17:51:48 by musoysal          #+#    #+#             */
-/*   Updated: 2025/04/06 18:19:08 by musoysal         ###   ########.fr       */
+/*   Updated: 2025/07/12 18:45:34 by musoysal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ int main(int argc, char const *argv[])
 {
 	t_args args;
 	t_philo *philos;
+	pthread_t monitor_thread;
 	int i = 0;
 
 	// Initialize the arguments
@@ -48,10 +49,21 @@ int main(int argc, char const *argv[])
 	else
 		args.n_must_eat = -1; // No limit on eating
 
+	// Initialize shared variables
+	args.start_time = get_time();
+	args.one_died = 0;
+	args.finished_eating = 0;
+
 	// Initialize the mutexes
 	args.forks = malloc(sizeof(pthread_mutex_t) * args.n_philo);
 	if (!args.forks)
 		return (printf("Error: Failed to allocate memory for forks\n"), 1);
+
+	if (pthread_mutex_init(&args.print_mutex, NULL) != 0)
+		return (free(args.forks), printf("Error: Failed to initialize print mutex\n"), 1);
+	
+	if (pthread_mutex_init(&args.death_mutex, NULL) != 0)
+		return (free(args.forks), printf("Error: Failed to initialize death mutex\n"), 1);
 
 	i = 0;
 	while (i < args.n_philo)
@@ -73,15 +85,32 @@ int main(int argc, char const *argv[])
 
 	while (i < args.n_philo)
 	{
-		philos[i].id = i;
+		philos[i].id = i + 1; // ID başlangıcı 1'den
 		philos[i].ate_count = 0;
 		philos[i].last_meal = get_time();
 		philos[i].left_fork = &args.forks[i];
-		philos[i].right_fork = &args.forks[(i + 1) % args.n_philo]; // Sol filozofun sağ çatalı, ilk filozofun sol çatalı
+		philos[i].right_fork = &args.forks[(i + 1) % args.n_philo];
 		philos[i].args = &args;
-		philos[i].args->one_died = 0;
-		pthread_create(&philos[i].thread, NULL, philo_routine, (void *)&philos[i]);
 		i++;
+	}
+
+	// Create philosopher threads
+	i = 0;
+	while (i < args.n_philo)
+	{
+		if (pthread_create(&philos[i].thread, NULL, philo_routine, (void *)&philos[i]) != 0)
+		{
+			printf("Error: Failed to create philosopher thread\n");
+			return (1);
+		}
+		i++;
+	}
+
+	// Create monitor thread
+	if (pthread_create(&monitor_thread, NULL, monitor_routine, (void *)philos) != 0)
+	{
+		printf("Error: Failed to create monitor thread\n");
+		return (1);
 	}
 
 	// Wait for all philosophers to finish
@@ -91,6 +120,7 @@ int main(int argc, char const *argv[])
 		pthread_join(philos[i].thread, NULL);
 		i++;
 	}
+	pthread_join(monitor_thread, NULL);
 
 	// Free allocated memory and destroy mutexes
 	i = 0;
@@ -99,6 +129,8 @@ int main(int argc, char const *argv[])
 		pthread_mutex_destroy(&args.forks[i]);
 		i++;
 	}
+	pthread_mutex_destroy(&args.print_mutex);
+	pthread_mutex_destroy(&args.death_mutex);
 
 	free(philos);
 	free(args.forks);
