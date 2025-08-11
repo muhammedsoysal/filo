@@ -5,7 +5,6 @@ CFLAGS = -Wall -Wextra -Werror
 RM = rm -f
 
 SRCS = main.c \
-		init.c \
 		routine.c \
 		utils.c 
 OBJS = $(SRCS:.c=.o)

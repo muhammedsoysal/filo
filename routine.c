@@ -6,7 +6,7 @@
 /*   By: musoysal <musoysal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 18:16:47 by musoysal          #+#    #+#             */
-/*   Updated: 2025/08/02 13:47:28 by musoysal         ###   ########.fr       */
+/*   Updated: 2025/08/10 19:46:37 by musoysal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,20 +41,29 @@ int is_dead(t_philo *philo)
 
 void take_forks(t_philo *philo)
 {
+	
+	if (philo->args->n_philo == 1)
+	{
+		pthread_mutex_lock(philo->left_fork);
+		print_action(philo, "has taken a fork 🍽️");
+		ft_usleep(philo->args->time_to_die);
+		pthread_mutex_unlock(philo->left_fork);
+		return;
+	}
 	// Deadlock'u önlemek için çift ID'li filozoflar önce sol, tek ID'liler önce sağ çatalı alır
 	if (philo->id % 2 == 0)
 	{
 		pthread_mutex_lock(philo->left_fork);
-		print_action(philo, "has taken a fork");
+		print_action(philo, "has taken a fork 🍽️");
 		pthread_mutex_lock(philo->right_fork);
-		print_action(philo, "has taken a fork");
+		print_action(philo, "has taken a fork 🍽️");
 	}
 	else
 	{
 		pthread_mutex_lock(philo->right_fork);
-		print_action(philo, "has taken a fork");
+		print_action(philo, "has taken a fork 🍽️");
 		pthread_mutex_lock(philo->left_fork);
-		print_action(philo, "has taken a fork");
+		print_action(philo, "has taken a fork 🍽️");
 	}
 }
 
@@ -67,7 +76,7 @@ void eat(t_philo *philo)
 	philo->ate_count++;
 	pthread_mutex_unlock(&philo->args->death_mutex);
 	
-	print_action(philo, "is eating");
+	print_action(philo, "is eating 🥘");
 	ft_usleep(philo->args->time_to_eat);
 	
 	pthread_mutex_unlock(philo->left_fork);
@@ -76,9 +85,9 @@ void eat(t_philo *philo)
 
 void sleep_and_think(t_philo *philo)
 {
-	print_action(philo, "is sleeping");
+	print_action(philo, "is sleeping 💤");
 	ft_usleep(philo->args->time_to_sleep);
-	print_action(philo, "is thinking");
+	print_action(philo, "is thinking 🤔");
 }
 
 void *philo_routine(void *philo)
