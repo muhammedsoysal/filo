@@ -6,15 +6,15 @@
 /*   By: musoysal <musoysal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 18:16:47 by musoysal          #+#    #+#             */
-/*   Updated: 2025/08/10 19:46:37 by musoysal         ###   ########.fr       */
+/*   Updated: 2025/08/12 22:33:10 by musoysal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void print_action(t_philo *philo, char *action)
+void	print_action(t_philo *philo, char *action)
 {
-	long time;
+	long	time;
 
 	pthread_mutex_lock(&philo->args->print_mutex);
 	pthread_mutex_lock(&philo->args->death_mutex);
@@ -27,7 +27,7 @@ void print_action(t_philo *philo, char *action)
 	pthread_mutex_unlock(&philo->args->print_mutex);
 }
 
-int is_dead(t_philo *philo)
+int	is_dead(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->args->death_mutex);
 	if (philo->args->one_died)
@@ -39,7 +39,7 @@ int is_dead(t_philo *philo)
 	return (0);
 }
 
-void take_forks(t_philo *philo)
+void	take_forks(t_philo *philo)
 {
 	
 	if (philo->args->n_philo == 1)
@@ -67,7 +67,7 @@ void take_forks(t_philo *philo)
 	}
 }
 
-void eat(t_philo *philo)
+void	eat(t_philo *philo)
 {
 	take_forks(philo);
 	
@@ -83,17 +83,18 @@ void eat(t_philo *philo)
 	pthread_mutex_unlock(philo->right_fork);
 }
 
-void sleep_and_think(t_philo *philo)
+void	sleep_and_think(t_philo *philo)
 {
 	print_action(philo, "is sleeping 💤");
 	ft_usleep(philo->args->time_to_sleep);
 	print_action(philo, "is thinking 🤔");
 }
 
-void *philo_routine(void *philo)
+void	*philo_routine(void *philo)
 {
-	t_philo *p = (t_philo *)philo;
+	t_philo	*p;
 
+	p = (t_philo *)philo;
 	// Çift ID'li filozofların biraz beklemesini sağla (deadlock'u önlemek için)
 	if (p->id % 2 == 0)
 		ft_usleep(p->args->time_to_eat / 2);
@@ -101,7 +102,6 @@ void *philo_routine(void *philo)
 	while (!is_dead(p))
 	{
 		eat(p);
-		
 		// Yeterince yediyse döngüden çık
 		pthread_mutex_lock(&p->args->death_mutex);
 		if (p->args->n_must_eat != -1 && p->ate_count >= p->args->n_must_eat)
@@ -119,17 +119,18 @@ void *philo_routine(void *philo)
 
 void *monitor_routine(void *arg)
 {
-	t_philo *philos = (t_philo *)arg;
-	t_args *args = philos[0].args;
-	int i;
+	t_philo	*philos;
+	t_args	*args;
+	int		i;
 
+	philos = (t_philo *)arg;
+	args = philos[0].args;
 	while (1)
 	{
 		i = 0;
 		while (i < args->n_philo)
 		{
 			pthread_mutex_lock(&args->death_mutex);
-			
 			// Ölüm kontrolü
 			if (get_time() - philos[i].last_meal > args->time_to_die)
 			{
@@ -140,7 +141,6 @@ void *monitor_routine(void *arg)
 				pthread_mutex_unlock(&args->print_mutex);
 				return (NULL);
 			}
-			
 			// Herkes yeterince yediyse bitir
 			if (args->n_must_eat != -1 && args->finished_eating >= args->n_philo)
 			{
@@ -148,7 +148,6 @@ void *monitor_routine(void *arg)
 				pthread_mutex_unlock(&args->death_mutex);
 				return (NULL);
 			}
-			
 			pthread_mutex_unlock(&args->death_mutex);
 			i++;
 		}
