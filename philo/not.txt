@@ -1,0 +1,5 @@
+1.Parser kısmını düzenle
+    ./philo 5 820 200 200 5clear 
+2. filo sayısı 1 oldupu zaman program patlıyor ve yanlış çalışıyor
+    valgrind --tool=helgrind ./philo 2 420 200 200 5  
+3.
