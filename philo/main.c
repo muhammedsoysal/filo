@@ -6,11 +6,16 @@
 /*   By: musoysal <musoysal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 17:51:48 by musoysal          #+#    #+#             */
-/*   Updated: 2025/08/12 22:35:02 by musoysal         ###   ########.fr       */
+/*   Updated: 2025/08/20 10:32:59 by musoysal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+static int ft_is_digit(char c)
+{
+	return (c >= '0' && c <= '9');
+}
 
 static int	args_check(int argc, char const *argv[])
 {
@@ -19,7 +24,7 @@ static int	args_check(int argc, char const *argv[])
 	i = 1;
 	while (i < argc)
 	{
-		if (ft_atoi(argv[i]) <= 0)
+		if (ft_atoi(argv[i]) <= 0 && ft_is_digit(argv[i][0]))
 			return (0);
 		i++;
 	}

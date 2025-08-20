@@ -6,7 +6,7 @@
 /*   By: musoysal <musoysal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 18:16:47 by musoysal          #+#    #+#             */
-/*   Updated: 2025/08/13 11:42:52 by musoysal         ###   ########.fr       */
+/*   Updated: 2025/08/17 16:01:06 by musoysal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,15 +41,15 @@ int	is_dead(t_philo *philo)
 
 void	take_forks(t_philo *philo)
 {
-	
+	// 1 filozof olduğunda özel durum
 	if (philo->args->n_philo == 1)
 	{
 		pthread_mutex_lock(philo->left_fork);
 		print_action(philo, "has taken a fork");
-		ft_usleep(philo->args->time_to_die);
-		pthread_mutex_unlock(philo->left_fork);
+		// İkinci çatal yok, yemek yiyemez
 		return;
 	}
+	
 	// Deadlock'u önlemek için çift ID'li filozoflar önce sol, tek ID'liler önce sağ çatalı alır
 	if (philo->id % 2 == 0)
 	{
@@ -69,8 +69,14 @@ void	take_forks(t_philo *philo)
 
 void	eat(t_philo *philo)
 {
+	// Çatalları al
 	take_forks(philo);
 	
+	// 1 filozof olduğunda yemek yiyemez, sadece çatalı alır ve ölür
+	if (philo->args->n_philo == 1)
+		return;
+	
+	// Yemek yeme işlemi
 	pthread_mutex_lock(&philo->args->death_mutex);
 	philo->last_meal = get_time();
 	philo->ate_count++;
@@ -79,6 +85,7 @@ void	eat(t_philo *philo)
 	print_action(philo, "is eating");
 	ft_usleep(philo->args->time_to_eat);
 	
+	// Çatalları bırak
 	pthread_mutex_unlock(philo->left_fork);
 	pthread_mutex_unlock(philo->right_fork);
 }
@@ -101,7 +108,16 @@ void	*philo_routine(void *philo)
 
 	while (!is_dead(p))
 	{
+		// Ölüm kontrolü
+		if (is_dead(p))
+			break;
+			
 		eat(p);
+		
+		// 1 filozof olduğunda sadece çatalı alır ve ölür
+		if (p->args->n_philo == 1)
+			break;
+		
 		// Yeterince yediyse döngüden çık
 		pthread_mutex_lock(&p->args->death_mutex);
 		if (p->args->n_must_eat != -1 && p->ate_count >= p->args->n_must_eat)
@@ -112,6 +128,10 @@ void	*philo_routine(void *philo)
 		}
 		pthread_mutex_unlock(&p->args->death_mutex);
 		
+		// Ölüm kontrolü
+		if (is_dead(p))
+			break;
+			
 		sleep_and_think(p);
 	}
 	return (NULL);
