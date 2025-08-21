@@ -6,7 +6,7 @@
 /*   By: musoysal <musoysal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 18:16:47 by musoysal          #+#    #+#             */
-/*   Updated: 2025/08/17 16:01:06 by musoysal         ###   ########.fr       */
+/*   Updated: 2025/08/20 14:35:27 by musoysal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ void	take_forks(t_philo *philo)
 	{
 		pthread_mutex_lock(philo->left_fork);
 		print_action(philo, "has taken a fork");
+		pthread_mutex_unlock(philo->left_fork);
+
 		// İkinci çatal yok, yemek yiyemez
 		return;
 	}
