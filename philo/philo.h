@@ -6,7 +6,7 @@
 /*   By: musoysal <musoysal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 22:28:49 by musoysal          #+#    #+#             */
-/*   Updated: 2025/08/12 22:28:50 by musoysal         ###   ########.fr       */
+/*   Updated: 2025/08/23 17:50:56 by musoysal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,19 +21,18 @@
 
 typedef struct s_args
 {
-	int n_philo;			// toplam filozof sayısı
-	int time_to_die;		// bir filozofun ölmesi için geçen süre
-	int time_to_eat;		// yemek yeme süresi
-	int time_to_sleep;		// uyku süresi
-	int n_must_eat;			// her filozofun yemesi gereken minimum miktar
-	long start_time;		// programın başlangıç zamanı
-	pthread_mutex_t *forks; // çatal mutexleri
+	int n_philo;				 // toplam filozof sayısı
+	int time_to_die;			 // bir filozofun ölmesi için geçen süre
+	int time_to_eat;			 // yemek yeme süresi
+	int time_to_sleep;			 // uyku süresi
+	int n_must_eat;				 // her filozofun yemesi gereken minimum miktar
+	long start_time;			 // programın başlangıç zamanı
+	pthread_mutex_t *forks;		 // çatal mutexleri
 	pthread_mutex_t print_mutex; // yazdırma için mutex
 	pthread_mutex_t death_mutex; // ölüm kontrolü için mutex
-	int one_died;			// bir filozofun öldüğünü kontrol etmek için
-	int finished_eating;	// yemek yemeyi bitiren filozof sayısı
+	int one_died;				 // bir filozofun öldüğünü kontrol etmek için
+	int finished_eating;		 // yemek yemeyi bitiren filozof sayısı
 } t_args;
-typedef struct s_philo t_philo;
 
 typedef struct s_philo
 {
@@ -55,4 +54,6 @@ int is_dead(t_philo *philo);
 int all_ate_enough(t_args *args);
 void print_action(t_philo *philo, char *action);
 void *monitor_routine(void *arg);
+int args_check(int argc, char const *argv[]);
+
 #endif
