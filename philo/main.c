@@ -6,7 +6,7 @@
 /*   By: musoysal <musoysal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 17:51:48 by musoysal          #+#    #+#             */
-/*   Updated: 2025/08/24 08:24:36 by musoysal         ###   ########.fr       */
+/*   Updated: 2025/08/24 17:51:07 by musoysal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int	main(int argc, char const *argv[])
 
 	if (init_args(argc, argv, &args) == -1)
 		return (1);
-	if (init_mutexes(&args) == -1)
+	if (init_mutexes(&args, 0) == -1)
 		return (1);
 	if (init_philosophers(&args, &philos) == -1)
 		return (1);

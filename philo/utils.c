@@ -6,7 +6,7 @@
 /*   By: musoysal <musoysal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 17:58:26 by musoysal          #+#    #+#             */
-/*   Updated: 2025/08/24 07:50:58 by musoysal         ###   ########.fr       */
+/*   Updated: 2025/08/24 17:39:09 by musoysal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	ft_atoi(const char *str)
 	result = 0;
 	while (*str == ' ' || (*str >= 9 && *str <= 13))
 		str++;
-	if (*str == '-' || *str == '+')
+	if (*str == '+' || *str == '-')
 	{
 		if (*str == '-')
 			sign = -1;
@@ -40,6 +40,24 @@ static int	ft_is_digit(char c)
 	return (c >= '0' && c <= '9');
 }
 
+static int	is_valid_number(const char *str)
+{
+	int	i;
+
+	if (*str == '+')
+		str++;
+	if (*str == '\0')
+		return (0);
+	i = 0;
+	while (str[i])
+	{
+		if (!ft_is_digit(str[i]))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 int	args_check(int argc, char const *argv[])
 {
 	int	i;
@@ -47,7 +65,7 @@ int	args_check(int argc, char const *argv[])
 	i = 1;
 	while (i < argc)
 	{
-		if (ft_atoi(argv[i]) <= 0 && ft_is_digit(argv[i][0]))
+		if (!is_valid_number(argv[i]) || ft_atoi(argv[i]) <= 0)
 			return (0);
 		i++;
 	}

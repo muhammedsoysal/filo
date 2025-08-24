@@ -6,7 +6,7 @@
 /*   By: musoysal <musoysal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 18:16:47 by musoysal          #+#    #+#             */
-/*   Updated: 2025/08/24 07:51:44 by musoysal         ###   ########.fr       */
+/*   Updated: 2025/08/24 17:52:15 by musoysal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ int	check_all_ate_enough(t_args *args)
 	{
 		args->one_died = 1;
 		pthread_mutex_unlock(&args->death_mutex);
-		printf("all philo ate enough\n");
 		return (1);
 	}
 	return (0);
@@ -60,10 +59,8 @@ int	init_args(int argc, char const *argv[], t_args *args)
 	return (0);
 }
 
-int	init_mutexes(t_args *args)
+int	init_mutexes(t_args *args, int i)
 {
-	int	i;
-
 	if (pthread_mutex_init(&args->print_mutex, NULL) != 0)
 	{
 		printf("Error: Failed to initialize print mutex\n");
@@ -73,7 +70,8 @@ int	init_mutexes(t_args *args)
 	if (pthread_mutex_init(&args->death_mutex, NULL) != 0)
 	{
 		printf("Error: Failed to initialize death mutex\n");
-		return (free(args->forks), -1);
+		free(args->forks);
+		return (-1);
 	}
 	i = 0;
 	while (i < args->n_philo)
