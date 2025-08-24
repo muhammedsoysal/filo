@@ -6,7 +6,7 @@
 /*   By: musoysal <musoysal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 17:58:26 by musoysal          #+#    #+#             */
-/*   Updated: 2025/08/23 17:50:43 by musoysal         ###   ########.fr       */
+/*   Updated: 2025/08/24 07:50:58 by musoysal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ int	ft_atoi(const char *str)
 	}
 	return (result * sign);
 }
-static int ft_is_digit(char c)
+
+static int	ft_is_digit(char c)
 {
 	return (c >= '0' && c <= '9');
 }
@@ -52,14 +53,16 @@ int	args_check(int argc, char const *argv[])
 	}
 	return (1);
 }
-long get_time(void)
+
+long	get_time(void)
 {
 	struct timeval	time;
 
 	gettimeofday(&time, NULL);
 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
-void ft_usleep(long time)
+
+void	ft_usleep(long time)
 {
 	long	start_time;
 

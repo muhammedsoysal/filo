@@ -6,7 +6,9 @@ RM = rm -f
 
 SRCS = main.c \
 		routine.c \
-		utils.c 
+		utils.c \
+		utils_two.c \
+		utils_three.c
 OBJS = $(SRCS:.c=.o)
 
 $(NAME): $(OBJS)
