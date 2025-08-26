@@ -6,7 +6,7 @@
 /*   By: musoysal <musoysal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 17:58:26 by musoysal          #+#    #+#             */
-/*   Updated: 2025/08/24 17:39:09 by musoysal         ###   ########.fr       */
+/*   Updated: 2025/08/26 18:10:51 by musoysal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,13 +78,4 @@ long	get_time(void)
 
 	gettimeofday(&time, NULL);
 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
-}
-
-void	ft_usleep(long time)
-{
-	long	start_time;
-
-	start_time = get_time();
-	while (get_time() - start_time < time)
-		usleep(100);
 }

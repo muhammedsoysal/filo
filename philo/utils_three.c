@@ -6,7 +6,7 @@
 /*   By: musoysal <musoysal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 18:16:47 by musoysal          #+#    #+#             */
-/*   Updated: 2025/08/24 17:52:15 by musoysal         ###   ########.fr       */
+/*   Updated: 2025/08/26 18:10:47 by musoysal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,4 +85,13 @@ int	init_mutexes(t_args *args, int i)
 		i++;
 	}
 	return (0);
+}
+
+void	ft_usleep(long time)
+{
+	long	start_time;
+
+	start_time = get_time();
+	while (get_time() - start_time < time)
+		usleep(100);
 }
